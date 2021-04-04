@@ -1,0 +1,630 @@
+;F1 driver DEMO
+
+;YOUEN CHENE/MicriX Productions
+WBStartup
+CloseEd
+NoCli
+;For K=0 To 100
+;    CloseWorkBench_
+;Next
+BitMap 0,640,256,2
+For k=0 To 3
+PalRGB 0,k,0,0,0
+Next
+LoadBitMap 0,"assets/LOGO",0
+BLITZ
+Slice 0,20,640,512,$fff9,2,8,4,640,640
+For k=0 To 3
+RGB k,0,0,0
+Next
+Show 0,0,0
+VWait 50
+FadeIn 0,10
+VWait 200
+FadeOut 0,10
+VWait 50
+DisplayOff
+FreeSlices
+;AMIGA
+;For k=0 To 3
+;PalRGB 0,k,0,0,0
+;Next
+;BitMap 0,320,256,2
+;LoadBitMap 0,"assets/BLITZ2_LOGO",0
+;BLITZ
+;Slice 0,44,320,256,$fff8,2,8,4,320,320
+;For k=0 To 3
+;RGB k,0,0,0
+;Next
+;Show 0
+;VWait 50
+;FadeIn 0,10
+;VWait 200
+;FadeOut 0,10
+;VWait 50
+;DisplayOff
+;FreeSlices
+AMIGA
+For k=0 To 3
+PalRGB 0,k,0,0,0
+Next
+VWait 50
+Buffer 0,20000
+Buffer 1,1634
+NEWTYPE .f1
+x.w
+y.w
+bx.w
+by.w
+v.b
+d.b
+t.b
+va.b
+vr.b
+c.b
+;h.b
+vd.b
+;pneu.b
+pos.b
+m.b
+;f.b
+;dir.b
+;ail.b
+;acc.b
+;sus.b
+vm.b
+lt.l
+tt.l
+bt.l
+t1.b
+ste.w
+s.b
+ch.b
+trace.b
+End NEWTYPE
+Dim f1.f1(1)
+f1(0)\v=0
+f1(0)\d=12
+nt.b=3
+f1(0)\vd=1
+f1(0)\va=3
+f1(0)\vr=1
+f1(0)\x=455
+f1(0)\y=128
+f1(0)\bx=0
+f1(0)\by=0
+f1(0)\c=0
+;f1(0)\h=0
+f1(0)\vm=5
+f1(1)\v=0
+f1(1)\d=4
+f1(1)\vd=1
+f1(1)\va=3
+f1(1)\vr=1
+f1(1)\x=465
+f1(1)\y=128
+f1(1)\bx=0
+f1(1)\by=0
+f1(1)\c=0
+;f1(1)\h=0
+f1(1)\vm=5
+Dim co1(2)
+f1(0)\bt=5000
+f1(1)\bt=5000
+b1.b
+b2.b
+mode$="arcade"
+j$="ordi"
+j1$="youen"
+j2$="samuel"
+w.b=0
+p.b=1
+vitesse$="normal"
+;cm.w=1
+p=1
+AMIGA
+;chargement
+;BitMap 1,320,256,1
+;LoadBitMap 1,"assets/F1TITRE"
+LoadShape 0,"assets/f10"
+LoadShape 12,"assets/f11"
+LoadShape 13,"assets/f113"
+LoadShape 14,"assets/f114"
+LoadShape 15,"assets/f115"
+CopyShape 0,8
+XFlip 8
+CopyShape 12,4
+YFlip 4
+CopyShape 13,11
+XFlip 11
+CopyShape 14,10
+XFlip 10
+CopyShape 15,9
+XFlip 9
+CopyShape 13,3
+YFlip 3
+CopyShape 14,2
+YFlip 2
+CopyShape 15,1
+YFlip 1
+CopyShape 9,7
+YFlip 7
+CopyShape 10,6
+YFlip 6
+CopyShape 11,5
+YFlip 5
+LoadShape 0+16,"assets/f10b"
+LoadShape 12+16,"assets/f11b"
+LoadShape 13+16,"assets/f113b"
+LoadShape 14+16,"assets/f114b"
+LoadShape 15+16,"assets/f115b"
+CopyShape 0+16,8+16
+XFlip 8+16
+CopyShape 12+16,4+16
+YFlip 4+16
+CopyShape 13+16,11+16
+XFlip 11+16
+CopyShape 14+16,10+16
+XFlip 10+16
+CopyShape 15+16,9+16
+XFlip 9+16
+CopyShape 13+16,3+16
+YFlip 3+16
+CopyShape 14+16,2+16
+YFlip 2+16
+CopyShape 15+16,1+16
+YFlip 1+16
+CopyShape 9+16,7+16
+YFlip 7+16
+CopyShape 10+16,6+16
+YFlip 6+16
+CopyShape 11+16,5+16
+YFlip 5+16
+LoadShape 32,"assets/feu1"
+LoadShape 33,"assets/feu2"
+LoadShape 34,"assets/DRAP1"
+LoadShape 35,"assets/DRAP2"
+LoadShape 36,"assets/DRAP"
+LoadSound 0,"assets/start.iff"
+LoadSound 1,"assets/motor.iff"
+LoadSound 2,"assets/screech.iff"
+LoadSound 3,"assets/crash1.IFF"
+LoadSound 4,"assets/crash2.IFF"
+LoadSound 5,"assets/crash3.IFF"
+LoadShape 37,"assets/skidmark"
+BitMap 0,640,512,4
+LoadBitMap 0,"assets/map_c1"
+LoadPalette 0,"assets/map_map"
+;les gadgets
+MENU:
+AMIGA
+Screen 0,1
+ScreensBitMap 0,1
+LoadBitMap 1,"assets/F1TITRE",1
+ShowBitMap 1
+Use Palette 1
+;LoadMedModule 0,"assets/Zique"
+;StartMedModule 0
+While Joyb(0)=0
+; PlayMed
+Wend
+;Free MedModule 0
+
+MENUP:
+AMIGA
+Use BitMap 1
+Use Palette 1
+TextGadget 0,70,25,0,1,"COURSE"          ;menu principal
+TextGadget 0,55,45,0,2,"CHAMPIONNAT"
+TextGadget 0,75,65,0,3,"TEMPS"
+TextGadget 0,70,85,0,4,"OPTIONS"
+TextGadget 0,70,105,0,5,"circuit"
+TextGadget 0,70,120,0,6,"QUITTER"
+TextGadget 1,35,25,0,1,"MODE"            ;options
+TextGadget 1,35,45,0,2,"TOUR"
+TextGadget 1,35,65,0,3,"VITESSE"
+TextGadget 1,35,85,0,4,"JOUEUR 1"
+TextGadget 1,35,105,0,5,"Joueur 2"
+TextGadget 1,70,120,0,6,"QUITTER"
+StringGadget 1,105,85,$1000,7,8,65
+StringGadget 1,105,105,$1000,8,8,65
+TextGadget 1,77,45,0,9,"+"
+TextGadget 1,97,45,0,10,"-"
+;TextGadget 2,0,25,0,1,j1$                ;record
+;TextGadget 2,105,25,0,2,j2$
+TextGadget 2,0,45,0,3,"Meilleurs T."
+TextGadget 2,0,65,0,4,"T. Total"
+;TextGadget 2,0,85,0,5,"Temps 1"
+;TextGadget 2,0,105,0,6,"Temps 2"
+TextGadget 2,70,120,0,7,"QUITTER"
+;TextGadget 3,0,25,0,1,j1$                ;championnat
+;TextGadget 3,0,45,0,2,j2$
+TextGadget 3,70,120,0,3,"QUITTER"
+f1(0)\v=0
+f1(0)\d=4
+;nt.b=3
+f1(0)\vd=1
+f1(0)\va=3
+f1(0)\vr=1
+f1(0)\x=455
+f1(0)\y=128
+f1(0)\bx=0
+f1(0)\by=0
+f1(0)\c=0
+;f1(0)\h=0
+;f1(0)\vm=5
+f1(1)\v=0
+f1(1)\d=4
+f1(1)\vd=1
+f1(1)\va=3
+f1(1)\vr=1
+f1(1)\x=465
+f1(1)\y=128
+f1(1)\bx=0
+f1(1)\by=0
+f1(1)\c=0
+;f1(1)\h=0
+;f1(1)\vm=5
+;Dim co1(2)
+b1=0
+b2=0
+w.b=0
+p.b=1
+p=1
+t=0
+Window 0,60,53,200,150,$1000,"F1 driver - Youen CHENE",2,3,0
+If f1(0)\pos<f1(1)\pos Then WLocate 0,0:NPrint "VICTOIRE DE ",j1$,"!!!";:f1(0)\ch+1
+If f1(1)\pos<f1(0)\pos Then WLocate 0,0:NPrint "VICTOIRE DE ",j2$,"!!!";:f1(1)\ch+1
+While w=0
+If WaitEvent=64
+   If GadgetHit=1 Then Goto jeux
+   If GadgetHit=2 Then Goto champ
+   If GadgetHit=3 Then Goto records
+   If GadgetHit=4 Then Goto options
+   If GadgetHit=5 Then Goto circuit
+   If GadgetHit=6 Then OpenWorkBench_:WBenchToFront_:End
+EndIf
+Wend
+circuit:
+Goto MENUP
+options:
+Free Window 0
+Window 1,60,53,200,150,$1000,"OPTIONS",2,3,1
+WLocate 112,36:NPrint nt
+ WLocate 88,16:NPrint mode$
+WLocate  100,56:NPrint f1(0)\vm
+While w=0
+If WaitEvent=64
+If GadgetHit=6
+   j1$=StringText$(1,7)
+   j2$=StringText$(1,8)
+   VWait 10
+   Free Window 1
+   Goto MENUP
+EndIf
+If GadgetHit=9 Then nt=nt+1:WLocate 112,36:NPrint "    ": WLocate 112,36:NPrint nt
+If GadgetHit=10 Then nt=nt-1:WLocate 112,36:NPrint "    ": WLocate 112,36:NPrint nt
+If GadgetHit=1
+   If mode$="simulation" Then mode$="arcade" Else mode$ ="simulation"
+  WLocate 88,16:NPrint "           "
+  WLocate 88,16:NPrint mode$
+EndIf
+If GadgetHit=3
+   f1(0)\vm=f1(0)\vm+1
+   f1(1)\vm=f1(1)\vm+1
+   If  f1(0)\vm=11 Then  f1(0)\vm=3:f1(1)\vm=3
+   WLocate  100,56:NPrint "          "
+   WLocate  100,56:NPrint f1(0)\vm
+EndIf
+EndIf
+Wend
+champ:
+Window 1,60,53,200,150,$1000,"CHAMPIONNAT",2,3,3
+Colour 2
+WLocate 1,15:NPrint j1$
+WLocate 1,40:NPrint j2$
+Colour 1
+WLocate 105,15:NPrint  f1(0)\ch
+WLocate 105,40:NPrint  f1(1)\ch
+If f1(0)\pos<f1(1)\pos Then WLocate 0,65:NPrint "Le premier est ",j1$
+If f1(1)\pos<f1(0)\pos Then WLocate 0,65:NPrint "Le premier est ",j2$
+While w=0
+If WaitEvent=64
+If GadgetHit=3
+   VWait 10
+   Free Window 1
+   Goto MENUP
+EndIf
+EndIf
+Wend
+records:
+;Int(f1(0)\bt\3000),":",(Int(f1(0)\bt\50)-(60*(Int(f1(0)\bt\3000);,":",f1(0)\bt-((Int(f1(0)\bt\50)-(60*(Int(f1(0)\bt\3000))-Int(
+Window 1,60,53,200,150,$1000,"MEILLEURS TEMPS",2,3,2
+Colour 2
+WLocate 95,25:NPrint j1$
+WLocate 145,25:NPrint j2$
+Colour 1
+WLocate 105,35:NPrint Int(f1(0)\bt*1/1500),":",(Int(f1(0)\bt*1/25))-(60*(Int(f1(0)\bt*1/1500)));f1(0)\bt
+WLocate 150,35:NPrint Int(f1(1)\bt*1/1500),":",(Int(f1(1)\bt*1/25))-(60*(Int(f1(1)\bt*1/1500)));f1(1)\bt
+WLocate 105,55:NPrint Int(f1(0)\tt*1/1500),":",(Int(f1(0)\tt*1/25))-(60*(Int(f1(0)\tt*1/1500)));f1(0)\tt
+WLocate 150,55:NPrint Int(f1(1)\tt*1/1500),":",(Int(f1(1)\tt*1/25))-(60*(Int(f1(1)\tt*1/1500)));f1(1)\tt
+While w=0
+If WaitEvent=64
+If GadgetHit=7
+   VWait 10
+   Free Window 1
+   Goto MENUP
+EndIf
+EndIf
+Wend
+jeux:
+;BitMap 0,640,512,4
+;LoadBitMap 0,"assets/map_c1"
+;LoadPalette 0,"assets/map_map"
+ax.b=440:ay.b=128:ax1.b=64:ay1.b=8:ax2=440:ay2=144
+f1(0)\lt=0
+f1(0)\tt=0
+f1(1)\lt=0
+f1(1)\tt=0
+f1(0)\t=0
+f1(1)\t=0
+f1(0)\t1=0
+f1(1)\t1=0
+drx.w=440
+dry.w=112
+dbx.w
+dby.w
+f1(0)\pos=0
+f1(0)\pos=0
+md.b=5
+Dim B(md,3)
+B(0,0)=104
+B(0,1)=88
+B(0,2)=48
+B(0,3)=224
+B(1,0)=104
+B(1,1)=280
+B(1,2)=432
+B(1,3)=32
+B(2,0)=504
+B(2,1)=104
+B(2,2)=32
+B(2,3)=208
+B(3,0)=224
+B(3,1)=0
+B(3,2)=208
+B(3,3)=208
+B(4,0)=312
+B(4,1)=296
+B(4,2)=112
+B(4,3)=80
+;For u=0 To 4
+;Boxf B(u,0),B(u,1),B(u,0)+B(u,2),B(u,1)+B(u,3),15
+;Next u
+BLITZ      ;mega vitesse!!!!!!!!!!!!!!!!
+Use BitMap 0
+Mouse On
+If p=1
+Slice 0,44,320,120,$fff8,4,0,16,640,640
+Use Palette 0
+Slice 1,180,320,120,$fff8,4,0,16,640,640
+Use Palette 0
+Else
+Slice 0,44,320,256,$fff8,4,0,16,640,640
+EndIf
+;For i=0 To 31
+;MidHandle i
+;Next i
+For i=0 To 1
+USEPATH f1(i)
+  ;position ecran
+  \bx=\x-160
+  \by=\y-60
+  If \x<160 Then  \bx=0
+  If \y<60 Then \by=0
+  If \x>480 Then \bx=320
+  If \y>452 Then \by=392
+Next i
+UnBuffer 0
+BBlit 0,f1(0)\d,f1(0)\x,f1(0)\y
+BBlit 0,f1(1)\d+16,f1(1)\x,f1(1)\y
+Use Palette 0
+Use Slice 0
+Show 0,f1(0)\bx,f1(0)\by
+  Use Slice 1
+  Show 0,f1(1)\bx,f1(1)\by
+Repeat
+If Joyb(0)=1 Then b1=1:Sound 0,2
+If Joyb(1)=1 Then b2=1:Sound 0,1
+Until b1=1 AND b2=1
+While t<nt
+ VWait 2
+ For z=0 To p
+USEPATH f1(z)
+;VWait
+Use Palette 0
+  If Joyr(1-z)=8 AND Joyb(1-z)=0 Then \v=-1
+  If Joyb(1-z)=1 Then \v=\v+\va:Sound 1,1+z,40
+  If Joyr(1-z)=0 Then \v=\v+\va:Sound 1,1+z,40
+  If Joyr(1-z)=4 Then \v=\v-\vr:Sound 2,3+z:\trace=1
+  If Joyr(1-z)=2 Then \d=\d+\vd:Sound 2,3+z
+  If Joyr(1-z)=6 Then \d=\d-\vd:Sound 2,3+z
+  If Joyr(1-z)=1 Then \v=\v+\va:\d=\d+\vd:Sound 2,3+z
+  If Joyr(1-z)=3 Then \d=d+\vd:v=v-vr:Sound 2,3+z
+  If Joyr(1-z)=5 Then \v=\v-\vr:\d=\d-\vd:Sound 2,3+z
+  If Joyr(1-z)=7 Then \v=\v+\va:\d=\d-\vd:Sound 2,3+z
+     If \v>\vm Then \v=\vm
+     If \d>15 Then \d=0
+     If \d<0 Then \d=15
+       For u=1 To 6
+         If Point(\x,\y)=u Then \v=\v-1:\trace=1
+       Next u
+     If \v<0 Then \v=0
+     If \d=0 Then \x=\x+\v
+     If \d=1 Then \x=\x+\v:\y=\y+Int(\v/2)
+     If \d=2 Then \x=\x+\v:\y=\y+\v
+     If \d=3 Then \x=\x+Int(v/2):\y=\y+\v
+     If \d=4 Then \y=\y+\v
+     If \d=5 Then \y=\y+\v:\x=\x-Int(\v/2)
+     If \d=6 Then \x=\x-\v:\y=\y+\v
+     If \d=7 Then \x=\x-\v:\y=\y+Int(\v/2)
+     If \d=8 Then \x=\x-\v
+     If \d=9 Then \x=\x-\v:\y=\y-Int(\v/2)
+     If \d=10 Then \x=\x-\v:\y=\y-\v
+     If \d=11 Then \y=\y-\v:\x=\x-Int(\v/2)
+     If \d=12 Then \y=\y-\v
+     If \d=13 Then \y=\y-\v:\x=\x+Int(\v/2)
+     If \d=14 Then \x=\x+\v:\y=\y-\v
+     If \d=15 Then \x=\x+\v:\y=\y-Int(\v/2)
+collisions:
+    ;stand
+If mode$="simulation"
+    If RectsHit(\x,\y,ShapeWidth (\d),ShapeHeight (\d),B(4,0),B(4,1),10,B(4,3))=-1
+       If \x<446 Then \s=1:\ste=100
+    EndIf
+     \ste=\ste-1
+     If \ste=0 Then \s=0:\d=0:\x=468:\y=360
+EndIf
+If \s=0
+    ;bord
+    If RectsHit(\x,\y,ShapeWidth (\d),ShapeHeight (\d),0,0,16,512)=-1 Then \x=18:\c=\c+7:Sound 3,3+z:\v=0
+    If RectsHit(\x,\y,ShapeWidth (\d),ShapeHeight (\d),0,0,640,16)=-1 Then \y=18:\c=\c+7:Sound 3,3+z:\v=0
+    If RectsHit(\x,\y,ShapeWidth (\d),ShapeHeight (\d),640-16,0,16,512)=-1 Then \x=623-ShapeWidth(\d):\c=\c+7:Sound 3,3+z:\v=0
+    If RectsHit(\x,\y,ShapeWidth (\d),ShapeHeight (\d),0,512-16,640,16)=-1 Then \y=495-ShapeHeight(\d):\c=\c+7:Sound 3,3+z:\v=0
+    ;tribune et pneus
+    For u=0 To md
+        If RectsHit(\x,\y,ShapeWidth (\d),ShapeHeight (\d),B(u,0),B(u,1),B(u,2),B(u,3))=-1
+           Sound 3,3+z
+           If \x<B(u,0) Then \x=B(u,0)-ShapeWidth (\d)-1:\c=\c+7:\v=0
+           If \x>B(u,0)+B(u,2)-11 Then \x=B(u,0)+B(u,2)+1:\c=\c+7:\v=0
+           If \y<B(u,1) Then \y=B(u,1)-ShapeHeight (\d)-1:\c=\c+7:\v=0
+           If \y>B(u,1)+B(u,3)-11 Then \y=B(u,1)+B(u,3)+1:\c=\c+7:\v=0
+        EndIf
+    Next u
+    ;voiture
+    If RectsHit(\x,\y,ShapeWidth (\d),ShapeHeight (\d),f1(1-z)\x,f1(1-z)\y,ShapeWidth (f1(1-z)\d),ShapeHeight (f1(1-z)\d))=-1
+           Sound 4,3+z
+           If \x<f1(1-z)\x Then \x=\x-vm-2:\c=\c+5:\v=0
+           If \x>f1(1-z)\x Then \x=\x+vm+2:\c=\c+5:\v=0
+           If \y<f1(1-z)\y Then \y=\y-vm-2:\c=\c+5:\v=0
+           If \y>f1(1-z)\y Then \y=\y+vm+2:\c=\c+5:\v=0
+        EndIf
+    ;temps et tours
+    \lt=\lt+1
+    \tt=\tt+1
+    If \t1=1
+       If \y>128 AND \y<140
+         If \x>400 AND \x<504 Then \t1=2
+       EndIf
+    EndIf
+    If \t1=0
+       If \y>336 AND \y<512
+         If \x>112 AND \x<126 Then \t1=1
+       EndIf
+    EndIf
+    If \t1=2
+       If \y>140 AND \y<152
+          If \x>400 AND \x<504
+             \t=\t+1:\t1=0
+             If \bt>\lt Then \bt=\lt
+             \lt=0
+          EndIf
+       EndIf
+    EndIf
+    ;quel place
+    If f1(0)\t>f1(1)\t
+       f1(0)\pos=1:f1(1)\pos=2
+    Else
+       f1(1)\pos=1:f1(0)\pos=2
+    EndIf
+    ; fin de la course
+    If \t=nt Then t=nt
+;mode simulation
+If mode$="simulation"
+   If \c>250
+      \vm=0
+   Else
+      If \c>200
+         \vm=3
+      Else
+         If \c>150 Then \vm=4
+      EndIf
+   EndIf
+;   pneu=pneu-c-h
+;   ail=ail-c-h
+;   acc=acc-c-h
+;   sus=sus-h-c
+;   f=f-h-c
+;   d=d-c
+;   m=m-c
+;   \va=Int(\pneu/100)+Int(\ail/100)+Int(\acc/200*2)+Int(\sus/100)
+;   If \va>3 Then \va=3
+;   If \va<1 Then \va=1
+;   \vr=Int(\f/33)
+;   If \vr>3 Then \vr=3
+;   \vm=Int(\m/20)
+   ;\vd=Int(\dir/33)
+   ;If vd > 1 then vd=1
+
+   EndIf
+EndIf
+  ;position ecran
+  \bx=\x-160
+  \by=\y-60
+  If \x<160 Then  \bx=0
+  If \y<60 Then \by=0
+  If \x>480 Then \bx=320
+  If \y>452 Then \by=392
+Next z
+affichage:
+Use BitMap 0
+UnBuffer 0
+If f1(0)\s=0
+   If f1(0)\trace=1 Then Blit 37,f1(0)\x,f1(0)\y:f1(0)\trace=0
+   BBlit 0,f1(0)\d,f1(0)\x,f1(0)\y
+EndIf
+If  f1(1)\s=0
+     If f1(1)\trace=1 Then Blit 37,f1(1)\x,f1(1)\y:f1(1)\trace=0
+     BBlit 0,f1(1)\d+16,f1(1)\x,f1(1)\y
+EndIf
+Use Slice 0
+Show 0,f1(0)\bx,f1(0)\by
+Use Slice 1
+Show 0,f1(1)\bx,f1(1)\by
+If f1(0)\vm=0
+   UnBuffer 1
+   BBlit 1,32,f1(0)\x,f1(0)\y
+   BBlit 1,33,f1(0)\x,f1(0)\y
+EndIf
+If f1(1)\vm=0
+   UnBuffer 1
+   BBlit 1,32,f1(1)\x,f1(1)\y
+   BBlit 1,33,f1(1)\x,f1(1)\y
+EndIf
+If f1(0)\vm=0
+   If f1(1)\vm=0
+      f1(0)\pos=f1(1)\pos
+      t=nt+1
+   EndIf
+EndIf
+Wend
+For i=0 To 4
+VWait 10
+UnBuffer 1
+BBlit 1,34,drx,dry
+VWait 10
+UnBuffer 1
+BBlit 1,35,drx,dry
+VWait 10
+UnBuffer 1
+BBlit 1,36,drx,dry
+Next i
+VWait
+UnBuffer 1
+VWait 100
+DisplayOff
+FreeSlices
+If f1(0)\pos<f1(1)\pos Then f1(0)\ch+1
+If f1(1)\pos<f1(0)\pos Then f1(1)\ch+1
+Goto MENUP
+
